@@ -28,7 +28,7 @@ export function PublicHeader() {
             ) : (
               <LashLogo className="size-12 text-primary" />
             )}
-            <span className="hidden sm:inline font-serif tracking-tight">
+            <span className="font-serif tracking-tight">
               {studioName}
             </span>
           </Link>

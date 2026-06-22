@@ -79,7 +79,7 @@ function HeroSection({
               alt={settings.studioName || "Hero"}
               className="absolute inset-0 w-full h-full object-cover"
             />
-            <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/30 to-black/60" />
+            <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/50 to-black/70" />
           </>
         ) : (
           <>
@@ -91,7 +91,7 @@ function HeroSection({
         )}
       </div>
 
-      <div className={`container text-center py-20 px-4 ${settings?.heroImageUrl ? "text-white" : ""}`}>
+      <div className={`container text-center py-20 px-4 ${settings?.heroImageUrl ? "text-white" : ""}`} style={settings?.heroImageUrl ? { textShadow: "0 2px 16px rgba(0,0,0,0.5), 0 1px 4px rgba(0,0,0,0.4)" } : undefined}>
         {/* Title */}
         <h1 className={`text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight leading-[1.05] mb-6 font-serif ${settings?.heroImageUrl ? "" : "text-foreground"}`}>
           {(() => {

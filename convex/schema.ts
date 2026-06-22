@@ -60,6 +60,25 @@ const schema = defineSchema({
     isVisible: v.boolean(),
   }),
 
+  // Client reviews / testimonials
+  reviews: defineTable({
+    clientName: v.string(),
+    text: v.string(),
+    rating: v.number(), // 1-5
+    photoStorageId: v.optional(v.id("_storage")),
+    date: v.string(), // "2026-06-22"
+    sortOrder: v.number(),
+    isVisible: v.boolean(),
+    source: v.union(v.literal("admin"), v.literal("client")), // who submitted
+    status: v.union(
+      v.literal("approved"),
+      v.literal("pending"),
+      v.literal("rejected"),
+    ),
+  })
+    .index("by_status", ["status"])
+    .index("by_sort", ["sortOrder"]),
+
   // Bookings from clients
   bookings: defineTable({
     clientName: v.string(),

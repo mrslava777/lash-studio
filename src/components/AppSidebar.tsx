@@ -7,6 +7,7 @@ import {
   LayoutDashboard,
   LayoutTemplate,
   LogOut,
+  MessageSquare,
   Moon,
   Settings,
   Sun,
@@ -55,6 +56,7 @@ const adminNav = [
   { href: "/admin/services", label: "Услуги", icon: LayoutDashboard },
   { href: "/admin/availability", label: "Расписание", icon: Calendar },
   { href: "/admin/gallery", label: "Галерея", icon: ImageIcon },
+  { href: "/admin/reviews", label: "Отзывы", icon: MessageSquare },
   { href: "/admin/sections", label: "Разделы", icon: LayoutTemplate },
   { href: "/admin/settings", label: "Настройки сайта", icon: Settings },
 ];

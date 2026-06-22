@@ -19,6 +19,7 @@ const schema = defineSchema({
     city: v.string(),
     workingHours: v.string(),
     logoStorageId: v.optional(v.id("_storage")),
+    heroImageStorageId: v.optional(v.id("_storage")),
     adminPassword: v.optional(v.string()),
   }),
 

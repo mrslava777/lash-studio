@@ -18,7 +18,7 @@ import {
   Shield,
   Award,
 } from "lucide-react";
-import { LashLogo } from "@/components/LashLogo";
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -77,14 +77,18 @@ function HeroSection({
       </div>
 
       <div className="container text-center py-20 px-4">
-        {/* Logo icon */}
-        <div className="inline-flex items-center justify-center mb-8">
-          {settings?.logoUrl ? (
-            <img src={settings.logoUrl} alt={settings.studioName ?? "Logo"} className="h-24 md:h-32 w-auto object-contain" />
-          ) : (
-            <LashLogo className="size-24 md:size-32 text-primary" />
-          )}
-        </div>
+        {/* Hero image */}
+        {settings?.heroImageUrl && (
+          <div className="inline-flex items-center justify-center mb-8">
+            <div className="relative w-56 h-56 md:w-72 md:h-72 rounded-full overflow-hidden border-4 border-primary/20 shadow-2xl shadow-primary/10">
+              <img
+                src={settings.heroImageUrl}
+                alt={settings.studioName ?? "Hero"}
+                className="w-full h-full object-cover"
+              />
+            </div>
+          </div>
+        )}
 
         {/* Title */}
         <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight leading-[1.05] mb-6 font-serif">

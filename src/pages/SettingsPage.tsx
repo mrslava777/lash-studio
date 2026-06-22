@@ -366,14 +366,16 @@ export function SettingsPage() {
         <SettingsField
           label="Заголовок"
           field="heroTitle"
-          placeholder="Идеальные ресницы для вашего взгляда"
+          placeholder="Идеальные ресницы&#10;для вашего взгляда"
+          multiline
           value={form.heroTitle}
           onChange={handleFieldChange}
           />
         <SettingsField
           label="Подзаголовок"
           field="heroSubtitle"
-          placeholder="Профессиональное наращивание ресниц"
+          placeholder="Профессиональное наращивание ресниц.&#10;Подчеркните естественную красоту ваших глаз"
+          multiline
           value={form.heroSubtitle}
           onChange={handleFieldChange}
           />

@@ -24,7 +24,7 @@ function getDefaultViktorSpacesEnv(): ViktorSpacesEnv {
 export function getViktorSpaceAccessMode(
   env: ViktorSpacesEnv = getDefaultViktorSpacesEnv(),
 ): ViktorSpaceAccessMode {
-  const configured = env.VITE_VIKTOR_SPACES_ACCESS_MODE || "public";
+  const configured = env.VITE_VIKTOR_SPACES_ACCESS_MODE || "space_auth";
   if (VALID_MODES.has(configured)) {
     return configured as ViktorSpaceAccessMode;
   }

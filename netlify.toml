@@ -1,5 +1,5 @@
 [build]
-  command = "npm install && npx tsc -b && npx vite build"
+  command = "npx vite build"
   publish = "dist"
 
 [build.environment]

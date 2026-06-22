@@ -9,8 +9,8 @@ dist/
 .env.local
 .env.*.local
 
-# Convex generated files
-convex/_generated/
+# Convex generated files (kept in repo for Netlify builds)
+# convex/_generated/
 
 # IDE
 .vscode/

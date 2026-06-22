@@ -67,29 +67,28 @@ function HeroSection({
 
   return (
     <section className="relative min-h-[92vh] flex items-center justify-center overflow-hidden">
-      {/* Modern gradient background */}
+      {/* Background: hero image or gradient */}
       <div className="absolute inset-0 -z-10">
-        <div className="absolute inset-0 bg-gradient-to-b from-primary/[0.04] via-background to-background" />
-        <div className="absolute top-[-20%] left-[-10%] w-[60%] h-[60%] rounded-full bg-gradient-to-br from-primary/8 to-transparent blur-[100px]" />
-        <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] rounded-full bg-gradient-to-tl from-rose-gold/10 to-transparent blur-[100px]" />
-        {/* Grid pattern */}
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,oklch(0.65_0.12_15/0.03)_1px,transparent_1px),linear-gradient(to_bottom,oklch(0.65_0.12_15/0.03)_1px,transparent_1px)] bg-[size:4rem_4rem]" />
+        {settings?.heroImageUrl ? (
+          <>
+            <img
+              src={settings.heroImageUrl}
+              alt={settings.studioName || "Hero"}
+              className="absolute inset-0 w-full h-full object-cover"
+            />
+            <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/30 to-black/60" />
+          </>
+        ) : (
+          <>
+            <div className="absolute inset-0 bg-gradient-to-b from-primary/[0.04] via-background to-background" />
+            <div className="absolute top-[-20%] left-[-10%] w-[60%] h-[60%] rounded-full bg-gradient-to-br from-primary/8 to-transparent blur-[100px]" />
+            <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] rounded-full bg-gradient-to-tl from-rose-gold/10 to-transparent blur-[100px]" />
+            <div className="absolute inset-0 bg-[linear-gradient(to_right,oklch(0.65_0.12_15/0.03)_1px,transparent_1px),linear-gradient(to_bottom,oklch(0.65_0.12_15/0.03)_1px,transparent_1px)] bg-[size:4rem_4rem]" />
+          </>
+        )}
       </div>
 
-      <div className="container text-center py-20 px-4">
-        {/* Hero image */}
-        {settings?.heroImageUrl && (
-          <div className="inline-flex items-center justify-center mb-8">
-            <div className="relative w-56 h-56 md:w-72 md:h-72 rounded-full overflow-hidden border-4 border-primary/20 shadow-2xl shadow-primary/10">
-              <img
-                src={settings.heroImageUrl}
-                alt={settings.studioName ?? "Hero"}
-                className="w-full h-full object-cover"
-              />
-            </div>
-          </div>
-        )}
-
+      <div className={`container text-center py-20 px-4 ${settings?.heroImageUrl ? "text-white" : ""}`}>
         {/* Title */}
         <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight leading-[1.05] mb-6 font-serif">
           {(() => {
@@ -100,7 +99,7 @@ function HeroSection({
               <>
                 {words.slice(0, mid).join(" ")}
                 <br />
-                <span className="bg-gradient-to-r from-primary to-rose-gold bg-clip-text text-transparent">
+                <span className={settings?.heroImageUrl ? "text-primary-foreground/80" : "bg-gradient-to-r from-primary to-rose-gold bg-clip-text text-transparent"}>
                   {words.slice(mid).join(" ")}
                 </span>
               </>
@@ -108,7 +107,7 @@ function HeroSection({
           })()}
         </h1>
 
-        <p className="text-base md:text-lg text-muted-foreground max-w-xl mx-auto leading-relaxed mb-10">
+        <p className={`text-base md:text-lg max-w-xl mx-auto leading-relaxed mb-10 ${settings?.heroImageUrl ? "text-white/80" : "text-muted-foreground"}`}>
           {settings?.heroSubtitle ||
             "Профессиональное наращивание ресниц. Подчеркните естественную красоту ваших глаз"}
         </p>
@@ -131,7 +130,7 @@ function HeroSection({
                 .getElementById("services")
                 ?.scrollIntoView({ behavior: "smooth" })
             }
-            className="px-8 py-6 text-base rounded-full text-muted-foreground hover:text-foreground"
+            className={`px-8 py-6 text-base rounded-full ${settings?.heroImageUrl ? "text-white/80 hover:text-white hover:bg-white/10" : "text-muted-foreground hover:text-foreground"}`}
           >
             Смотреть услуги
           </Button>
@@ -146,7 +145,7 @@ function HeroSection({
           ].map(({ icon: Icon, label }) => (
             <div
               key={label}
-              className="flex items-center justify-center gap-2 px-4 py-3 rounded-2xl bg-card/60 backdrop-blur-sm border border-border/50 text-sm text-muted-foreground"
+              className={`flex items-center justify-center gap-2 px-4 py-3 rounded-2xl backdrop-blur-sm border text-sm ${settings?.heroImageUrl ? "bg-white/10 border-white/20 text-white/90" : "bg-card/60 border-border/50 text-muted-foreground"}`}
             >
               <Icon className="size-4 text-primary shrink-0" />
               <span>{label}</span>

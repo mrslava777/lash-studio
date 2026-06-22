@@ -1,12 +1,50 @@
 import { useQuery, useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { Save, Settings, Upload, Trash2, ImageIcon, Lock, Eye, EyeOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { LashLogo } from "@/components/LashLogo";
 import { toast } from "sonner";
+
+/* Field component defined OUTSIDE SettingsPage to prevent re-creation on every render */
+function SettingsField({
+  label,
+  field,
+  placeholder,
+  multiline,
+  value,
+  onChange,
+}: {
+  label: string;
+  field: string;
+  placeholder?: string;
+  multiline?: boolean;
+  value: string;
+  onChange: (field: string, value: string) => void;
+}) {
+  return (
+    <div>
+      <label className="block text-sm font-medium mb-1.5">{label}</label>
+      {multiline ? (
+        <Textarea
+          value={value}
+          onChange={(e) => onChange(field, e.target.value)}
+          placeholder={placeholder}
+          rows={3}
+          className="resize-none"
+        />
+      ) : (
+        <Input
+          value={value}
+          onChange={(e) => onChange(field, e.target.value)}
+          placeholder={placeholder}
+        />
+      )}
+    </div>
+  );
+}
 
 export function SettingsPage() {
   const settings = useQuery(api.siteSettings.get);
@@ -152,36 +190,9 @@ export function SettingsPage() {
     }
   };
 
-  const Field = ({
-    label,
-    field,
-    placeholder,
-    multiline,
-  }: {
-    label: string;
-    field: keyof typeof form;
-    placeholder?: string;
-    multiline?: boolean;
-  }) => (
-    <div>
-      <label className="block text-sm font-medium mb-1.5">{label}</label>
-      {multiline ? (
-        <Textarea
-          value={form[field]}
-          onChange={(e) => setForm({ ...form, [field]: e.target.value })}
-          placeholder={placeholder}
-          rows={3}
-          className="resize-none"
-        />
-      ) : (
-        <Input
-          value={form[field]}
-          onChange={(e) => setForm({ ...form, [field]: e.target.value })}
-          placeholder={placeholder}
-        />
-      )}
-    </div>
-  );
+  const handleFieldChange = useCallback((field: string, value: string) => {
+    setForm((prev) => ({ ...prev, [field]: value }));
+  }, []);
 
   return (
     <div className="space-y-8 max-w-2xl">
@@ -325,72 +336,92 @@ export function SettingsPage() {
           <Settings className="size-4 text-primary" />
           Основная информация
         </h2>
-        <Field
+        <SettingsField
           label="Название студии"
           field="studioName"
           placeholder="Lash Studio"
-        />
-        <Field
+          value={form.studioName}
+          onChange={handleFieldChange}
+          />
+        <SettingsField
           label="Слоган"
           field="tagline"
           placeholder="Красота в каждом взгляде"
-        />
-        <Field
+          value={form.tagline}
+          onChange={handleFieldChange}
+          />
+        <SettingsField
           label="О мастере / студии"
           field="aboutText"
           placeholder="Расскажите о себе..."
           multiline
-        />
+          value={form.aboutText}
+          onChange={handleFieldChange}
+          />
       </section>
 
       {/* Hero */}
       <section className="bg-card border rounded-xl p-6 space-y-4">
         <h2 className="font-semibold">Главный экран</h2>
-        <Field
+        <SettingsField
           label="Заголовок"
           field="heroTitle"
           placeholder="Идеальные ресницы для вашего взгляда"
-        />
-        <Field
+          value={form.heroTitle}
+          onChange={handleFieldChange}
+          />
+        <SettingsField
           label="Подзаголовок"
           field="heroSubtitle"
           placeholder="Профессиональное наращивание ресниц"
-        />
+          value={form.heroSubtitle}
+          onChange={handleFieldChange}
+          />
       </section>
 
       {/* Contacts */}
       <section className="bg-card border rounded-xl p-6 space-y-4">
         <h2 className="font-semibold">Контакты</h2>
         <div className="grid sm:grid-cols-2 gap-4">
-          <Field
+          <SettingsField
             label="Телефон"
             field="phone"
             placeholder="+375 (29) 000-00-00"
-          />
-          <Field label="Город" field="city" placeholder="Минск" />
+            value={form.phone}
+            onChange={handleFieldChange}
+            />
+          <SettingsField label="Город" field="city" placeholder="Минск" value={form.city} onChange={handleFieldChange} />
         </div>
-        <Field
+        <SettingsField
           label="Адрес"
           field="address"
           placeholder="ул. Примерная, 10"
-        />
+          value={form.address}
+          onChange={handleFieldChange}
+          />
         <div className="grid sm:grid-cols-2 gap-4">
-          <Field
+          <SettingsField
             label="Instagram"
             field="instagram"
             placeholder="@lash.studio"
-          />
-          <Field
+            value={form.instagram}
+            onChange={handleFieldChange}
+            />
+          <SettingsField
             label="Telegram"
             field="telegram"
             placeholder="@lash_studio"
-          />
+            value={form.telegram}
+            onChange={handleFieldChange}
+            />
         </div>
-        <Field
+        <SettingsField
           label="Время работы"
           field="workingHours"
           placeholder="Пн-Сб: 9:00 – 20:00"
-        />
+          value={form.workingHours}
+          onChange={handleFieldChange}
+          />
       </section>
 
       <Button

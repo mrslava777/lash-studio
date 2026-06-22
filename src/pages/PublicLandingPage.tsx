@@ -41,6 +41,20 @@ export function PublicLandingPage() {
 
   const studioName = settings?.studioName || "Lash Studio";
 
+  // Show elegant loading screen while Convex data loads
+  if (settings === undefined) {
+    return (
+      <div className="flex-1 flex items-center justify-center min-h-screen bg-background">
+        <div className="flex flex-col items-center gap-4">
+          <div className="relative">
+            <div className="w-12 h-12 rounded-full border-2 border-primary/20 border-t-primary animate-spin" />
+          </div>
+          <p className="text-muted-foreground text-sm animate-pulse">Загрузка...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="flex-1 flex flex-col overflow-hidden">
       <HeroSection settings={settings} />

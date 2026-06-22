@@ -17,6 +17,7 @@ import {
   ChevronRight,
   Shield,
   Award,
+  MessageSquare,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -36,6 +37,7 @@ export function PublicLandingPage() {
   const services = useQuery(api.services.listActive);
   const galleryItems = useQuery(api.gallery.listVisible);
   const customSections = useQuery(api.customSections.listVisible);
+  const reviews = useQuery(api.reviews.listPublic);
 
   const studioName = settings?.studioName || "Lash Studio";
 
@@ -44,6 +46,7 @@ export function PublicLandingPage() {
       <HeroSection settings={settings} />
       <ServicesSection services={services ?? []} />
       <GallerySection items={galleryItems ?? []} />
+      <ReviewsSection reviews={reviews ?? []} />
       {/* Custom sections */}
       {(customSections ?? []).map((section) => (
         <CustomSection key={section._id} section={section} />
@@ -353,6 +356,213 @@ function GallerySection({
           )}
         </div>
       )}
+    </section>
+  );
+}
+
+/* ───── Reviews ───── */
+function ReviewsSection({
+  reviews,
+}: {
+  reviews: Array<{
+    _id: Id<"reviews">;
+    clientName: string;
+    text: string;
+    rating: number;
+    photoUrl: string | null;
+    date: string;
+  }>;
+}) {
+  const submitReview = useMutation(api.reviews.submit);
+  const [showForm, setShowForm] = useState(false);
+  const [name, setName] = useState("");
+  const [text, setText] = useState("");
+  const [rating, setRating] = useState(5);
+  const [submitting, setSubmitting] = useState(false);
+
+  const handleSubmit = async () => {
+    if (!name.trim() || !text.trim()) {
+      toast.error("Пожалуйста, заполните имя и текст отзыва");
+      return;
+    }
+    setSubmitting(true);
+    try {
+      await submitReview({
+        clientName: name.trim(),
+        text: text.trim(),
+        rating,
+      });
+      toast.success("Спасибо за отзыв! Он появится после модерации");
+      setName("");
+      setText("");
+      setRating(5);
+      setShowForm(false);
+    } catch {
+      toast.error("Ошибка при отправке");
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  return (
+    <section id="reviews" className="py-20 md:py-28 bg-accent/30">
+      <div className="container">
+        <div className="text-center mb-16">
+          <p className="text-sm font-medium text-primary mb-3 tracking-widest uppercase">
+            Отзывы
+          </p>
+          <h2 className="text-3xl md:text-4xl font-bold tracking-tight mb-4 font-serif">
+            Что говорят клиенты
+          </h2>
+          <p className="text-muted-foreground max-w-xl mx-auto text-lg">
+            Доверие наших клиентов — лучшая награда
+          </p>
+        </div>
+
+        {reviews.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+            {reviews.map((review) => (
+              <div
+                key={review._id}
+                className="bg-card rounded-2xl p-6 shadow-sm border border-border/50 hover:shadow-md transition-shadow"
+              >
+                <div className="flex items-center gap-3 mb-4">
+                  {review.photoUrl ? (
+                    <img
+                      src={review.photoUrl}
+                      alt={review.clientName}
+                      className="size-12 rounded-full object-cover"
+                    />
+                  ) : (
+                    <div className="size-12 rounded-full bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center">
+                      <span className="text-lg font-semibold text-primary">
+                        {review.clientName.charAt(0).toUpperCase()}
+                      </span>
+                    </div>
+                  )}
+                  <div>
+                    <p className="font-medium text-sm">{review.clientName}</p>
+                    <div className="flex gap-0.5">
+                      {[1, 2, 3, 4, 5].map((star) => (
+                        <Star
+                          key={star}
+                          className={`size-3.5 ${
+                            star <= review.rating
+                              ? "fill-amber-400 text-amber-400"
+                              : "text-muted-foreground/20"
+                          }`}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                </div>
+                <p className="text-sm text-muted-foreground leading-relaxed mb-3">
+                  "{review.text}"
+                </p>
+                <p className="text-xs text-muted-foreground/60">{review.date}</p>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="text-center mb-12">
+            <div className="inline-flex size-16 items-center justify-center rounded-full bg-primary/10 mb-4">
+              <MessageSquare className="size-7 text-primary/50" />
+            </div>
+            <p className="text-muted-foreground mb-2">
+              Отзывов пока нет
+            </p>
+            <p className="text-sm text-muted-foreground/60">
+              Будьте первым!
+            </p>
+          </div>
+        )}
+
+        {/* Leave a review form */}
+        <div className="text-center">
+          {!showForm ? (
+            <Button
+              variant="outline"
+              size="lg"
+              className="rounded-full px-8"
+              onClick={() => setShowForm(true)}
+            >
+              <MessageSquare className="size-4 mr-2" />
+              Оставить отзыв
+            </Button>
+          ) : (
+            <div className="max-w-md mx-auto bg-card rounded-2xl p-6 shadow-sm border">
+              <h3 className="font-semibold text-lg mb-4 font-serif">
+                Ваш отзыв
+              </h3>
+              <div className="space-y-3 text-left">
+                <div>
+                  <label className="text-sm font-medium mb-1 block">
+                    Ваше имя
+                  </label>
+                  <input
+                    type="text"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    placeholder="Анна"
+                    className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm"
+                  />
+                </div>
+                <div>
+                  <label className="text-sm font-medium mb-1 block">
+                    Оценка
+                  </label>
+                  <div className="flex gap-1">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <button
+                        key={star}
+                        type="button"
+                        onClick={() => setRating(star)}
+                        className="hover:scale-110 transition-transform"
+                      >
+                        <Star
+                          className={`size-6 ${
+                            star <= rating
+                              ? "fill-amber-400 text-amber-400"
+                              : "text-muted-foreground/30"
+                          }`}
+                        />
+                      </button>
+                    ))}
+                  </div>
+                </div>
+                <div>
+                  <label className="text-sm font-medium mb-1 block">
+                    Отзыв
+                  </label>
+                  <textarea
+                    value={text}
+                    onChange={(e) => setText(e.target.value)}
+                    placeholder="Расскажите о вашем опыте..."
+                    rows={4}
+                    className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm resize-none"
+                  />
+                </div>
+                <div className="flex gap-2 pt-2">
+                  <Button
+                    onClick={handleSubmit}
+                    disabled={submitting}
+                    className="flex-1 rounded-xl"
+                  >
+                    {submitting ? "Отправка..." : "Отправить"}
+                  </Button>
+                  <Button
+                    variant="outline"
+                    onClick={() => setShowForm(false)}
+                    className="rounded-xl"
+                  >
+                    Отмена
+                  </Button>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
     </section>
   );
 }
@@ -878,11 +1088,8 @@ function Footer({ studioName }: { studioName: string }) {
   return (
     <footer className="border-t py-8">
       <div className="container">
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-muted-foreground">
-          <p>
-            © {new Date().getFullYear()} {studioName}. Все права защищены.
-          </p>
-          <nav className="flex gap-6">
+        <div className="flex flex-col items-center gap-4 text-sm text-muted-foreground">
+          <nav className="flex flex-wrap justify-center gap-x-5 gap-y-2">
             <a
               href="#services"
               className="hover:text-primary transition-colors"
@@ -908,6 +1115,9 @@ function Footer({ studioName }: { studioName: string }) {
               Админ
             </a>
           </nav>
+          <p className="text-xs text-center">
+            © {new Date().getFullYear()} {studioName}. Все права защищены.
+          </p>
         </div>
       </div>
     </footer>

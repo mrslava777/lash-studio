@@ -16,6 +16,7 @@ import type * as constants from "../constants.js";
 import type * as customSections from "../customSections.js";
 import type * as gallery from "../gallery.js";
 import type * as http from "../http.js";
+import type * as reviews from "../reviews.js";
 import type * as seed from "../seed.js";
 import type * as seedTestUser from "../seedTestUser.js";
 import type * as services from "../services.js";
@@ -39,6 +40,7 @@ declare const fullApi: ApiFromModules<{
   customSections: typeof customSections;
   gallery: typeof gallery;
   http: typeof http;
+  reviews: typeof reviews;
   seed: typeof seed;
   seedTestUser: typeof seedTestUser;
   services: typeof services;

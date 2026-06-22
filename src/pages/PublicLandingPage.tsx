@@ -95,7 +95,20 @@ function HeroSection({
         {/* Title */}
         <h1 className={`text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight leading-[1.05] mb-6 font-serif ${settings?.heroImageUrl ? "" : "text-foreground"}`}>
           {(() => {
-            const title = settings?.heroTitle || "Идеальные ресницы для вашего взгляда";
+            const title = settings?.heroTitle || "Идеальные ресницы\nдля вашего взгляда";
+            const lines = title.split("\n");
+            if (lines.length >= 2) {
+              return (
+                <>
+                  {lines.slice(0, -1).map((line, i) => (
+                    <span key={i}>{line}<br /></span>
+                  ))}
+                  <span className={settings?.heroImageUrl ? "text-white/80" : "text-primary"}>
+                    {lines[lines.length - 1]}
+                  </span>
+                </>
+              );
+            }
             const words = title.split(" ");
             const mid = Math.ceil(words.length / 2);
             return (
@@ -111,8 +124,12 @@ function HeroSection({
         </h1>
 
         <p className={`text-base md:text-lg max-w-xl mx-auto leading-relaxed mb-10 ${settings?.heroImageUrl ? "text-white/80" : "text-foreground/70"}`}>
-          {settings?.heroSubtitle ||
-            "Профессиональное наращивание ресниц. Подчеркните естественную красоту ваших глаз"}
+          {(() => {
+            const subtitle = settings?.heroSubtitle || "Профессиональное наращивание ресниц. Подчеркните естественную красоту ваших глаз";
+            return subtitle.split("\n").map((line, i, arr) => (
+              <span key={i}>{line}{i < arr.length - 1 && <br />}</span>
+            ));
+          })()}
         </p>
 
         {/* CTA */}

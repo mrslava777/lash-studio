@@ -14,9 +14,13 @@ export function SettingsPage() {
   const generateUploadUrl = useMutation(api.siteSettings.generateUploadUrl);
   const updateLogo = useMutation(api.siteSettings.updateLogo);
   const removeLogo = useMutation(api.siteSettings.removeLogo);
+  const updateHeroImage = useMutation(api.siteSettings.updateHeroImage);
+  const removeHeroImage = useMutation(api.siteSettings.removeHeroImage);
   const [saving, setSaving] = useState(false);
   const [uploadingLogo, setUploadingLogo] = useState(false);
+  const [uploadingHeroImage, setUploadingHeroImage] = useState(false);
   const logoInputRef = useRef<HTMLInputElement>(null);
+  const heroImageInputRef = useRef<HTMLInputElement>(null);
 
   const [form, setForm] = useState({
     studioName: "",
@@ -94,6 +98,48 @@ export function SettingsPage() {
     } finally {
       setUploadingLogo(false);
       if (logoInputRef.current) logoInputRef.current.value = "";
+    }
+  };
+
+  const handleHeroImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith("image/")) {
+      toast.error("Пожалуйста, выберите изображение");
+      return;
+    }
+
+    if (file.size > 10 * 1024 * 1024) {
+      toast.error("Файл слишком большой (максимум 10 МБ)");
+      return;
+    }
+
+    setUploadingHeroImage(true);
+    try {
+      const uploadUrl = await generateUploadUrl();
+      const response = await fetch(uploadUrl, {
+        method: "POST",
+        headers: { "Content-Type": file.type },
+        body: file,
+      });
+      const { storageId } = await response.json();
+      await updateHeroImage({ storageId });
+      toast.success("Фото обновлено!");
+    } catch {
+      toast.error("Ошибка при загрузке фото");
+    } finally {
+      setUploadingHeroImage(false);
+      if (heroImageInputRef.current) heroImageInputRef.current.value = "";
+    }
+  };
+
+  const handleRemoveHeroImage = async () => {
+    try {
+      await removeHeroImage();
+      toast.success("Фото удалено");
+    } catch {
+      toast.error("Ошибка при удалении фото");
     }
   };
 
@@ -207,6 +253,68 @@ export function SettingsPage() {
           type="file"
           accept="image/*"
           onChange={handleLogoUpload}
+          className="hidden"
+        />
+      </section>
+
+      {/* Hero Image */}
+      <section className="bg-card border rounded-xl p-6 space-y-4">
+        <h2 className="font-semibold flex items-center gap-2">
+          <ImageIcon className="size-4 text-primary" />
+          Фото на главном экране
+        </h2>
+        <p className="text-sm text-muted-foreground">
+          Фото отображается в центре заголовка сайта (рекомендуемый размер: 600×600 px)
+        </p>
+
+        <div className="flex items-center gap-6">
+          <div className="shrink-0 size-24 rounded-full border-2 border-dashed border-border flex items-center justify-center bg-muted/30 overflow-hidden">
+            {settings?.heroImageUrl ? (
+              <img
+                src={settings.heroImageUrl}
+                alt="Фото"
+                className="size-full object-cover"
+              />
+            ) : (
+              <ImageIcon className="size-8 text-muted-foreground/40" />
+            )}
+          </div>
+
+          <div className="flex flex-col gap-2">
+            <div className="flex gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => heroImageInputRef.current?.click()}
+                disabled={uploadingHeroImage}
+                className="gap-2"
+              >
+                <Upload className="size-3.5" />
+                {uploadingHeroImage ? "Загрузка..." : settings?.heroImageUrl ? "Заменить" : "Загрузить"}
+              </Button>
+              {settings?.heroImageUrl && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={handleRemoveHeroImage}
+                  className="gap-2 text-destructive hover:text-destructive"
+                >
+                  <Trash2 className="size-3.5" />
+                  Удалить
+                </Button>
+              )}
+            </div>
+            <p className="text-xs text-muted-foreground">
+              PNG или JPG. Квадратное фото будет выглядеть лучше всего.
+            </p>
+          </div>
+        </div>
+
+        <input
+          ref={heroImageInputRef}
+          type="file"
+          accept="image/*"
+          onChange={handleHeroImageUpload}
           className="hidden"
         />
       </section>

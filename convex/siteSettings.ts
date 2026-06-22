@@ -20,6 +20,8 @@ export const get = query({
       workingHours: v.string(),
       logoStorageId: v.optional(v.id("_storage")),
       logoUrl: v.union(v.string(), v.null()),
+      heroImageStorageId: v.optional(v.id("_storage")),
+      heroImageUrl: v.union(v.string(), v.null()),
       hasAdminPassword: v.boolean(),
     }),
     v.null(),
@@ -30,9 +32,12 @@ export const get = query({
     const logoUrl = settings.logoStorageId
       ? await ctx.storage.getUrl(settings.logoStorageId)
       : null;
+    const heroImageUrl = settings.heroImageStorageId
+      ? await ctx.storage.getUrl(settings.heroImageStorageId)
+      : null;
     // Never expose the actual password to the frontend
     const { adminPassword: _pw, ...rest } = settings;
-    return { ...rest, logoUrl, hasAdminPassword: !!_pw };
+    return { ...rest, logoUrl, heroImageUrl, hasAdminPassword: !!_pw };
   },
 });
 
@@ -136,6 +141,36 @@ export const changeAdminPassword = mutation({
     }
     await ctx.db.patch(settings._id, { adminPassword: args.newPassword });
     return true;
+  },
+});
+
+export const updateHeroImage = mutation({
+  args: {
+    storageId: v.id("_storage"),
+  },
+  returns: v.null(),
+  handler: async (ctx, args) => {
+    const existing = await ctx.db.query("siteSettings").first();
+    if (existing) {
+      if (existing.heroImageStorageId) {
+        await ctx.storage.delete(existing.heroImageStorageId);
+      }
+      await ctx.db.patch(existing._id, { heroImageStorageId: args.storageId });
+    }
+    return null;
+  },
+});
+
+export const removeHeroImage = mutation({
+  args: {},
+  returns: v.null(),
+  handler: async (ctx) => {
+    const existing = await ctx.db.query("siteSettings").first();
+    if (existing?.heroImageStorageId) {
+      await ctx.storage.delete(existing.heroImageStorageId);
+      await ctx.db.patch(existing._id, { heroImageStorageId: undefined });
+    }
+    return null;
   },
 });
 

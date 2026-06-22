@@ -93,7 +93,7 @@ function HeroSection({
 
       <div className={`container text-center py-20 px-4 ${settings?.heroImageUrl ? "text-white" : ""}`} style={settings?.heroImageUrl ? { textShadow: "0 2px 16px rgba(0,0,0,0.5), 0 1px 4px rgba(0,0,0,0.4)" } : undefined}>
         {/* Title */}
-        <h1 className={`text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight leading-[1.05] mb-6 font-serif ${settings?.heroImageUrl ? "" : "text-foreground"}`}>
+        <h1 className={`text-[28px] sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight leading-[1.1] mb-6 font-serif ${settings?.heroImageUrl ? "" : "text-foreground"}`}>
           {(() => {
             const title = settings?.heroTitle || "Идеальные ресницы\nдля вашего взгляда";
             const lines = title.split("\n");

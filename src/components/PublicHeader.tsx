@@ -7,7 +7,7 @@ import { LashLogo } from "./LashLogo";
 
 export function PublicHeader() {
   const settings = useQuery(api.siteSettings.get);
-  const studioName = settings?.studioName ?? "Lash Studio";
+  const studioName = settings?.studioName || "Lash Studio";
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const scrollTo = (id: string) => {

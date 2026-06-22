@@ -92,6 +92,10 @@ function HeroSection({
       </div>
 
       <div className={`container text-center py-20 px-4 ${settings?.heroImageUrl ? "text-white" : ""}`} style={settings?.heroImageUrl ? { textShadow: "0 2px 16px rgba(0,0,0,0.5), 0 1px 4px rgba(0,0,0,0.4)" } : undefined}>
+        {/* Studio name */}
+        <p className={`text-sm md:text-base tracking-[0.25em] uppercase mb-4 font-medium ${settings?.heroImageUrl ? "text-white/70" : "text-primary/70"}`}>
+          {settings?.studioName || "Lash Studio"}
+        </p>
         {/* Title */}
         <h1 className={`text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight leading-[1.05] mb-6 font-serif ${settings?.heroImageUrl ? "" : "text-foreground"}`}>
           {(() => {

@@ -1,6 +1,5 @@
-# rebuild: 2
 [build]
-  command = "bun install && bun run build"
+  command = "bun install && bun run vite build"
   publish = "dist"
 
 [build.environment]

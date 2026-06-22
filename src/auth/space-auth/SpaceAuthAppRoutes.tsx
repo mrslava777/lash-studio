@@ -1,4 +1,4 @@
-import { ConvexAuthProvider } from "@convex-dev/auth/react";
+import { ConvexProvider } from "convex/react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import { AppLayout } from "@/components/AppLayout";
 import { PublicLayout } from "@/components/PublicLayout";
@@ -24,7 +24,7 @@ function AdminRoutes() {
 
 export function SpaceAuthAppRoutes() {
   return (
-    <ConvexAuthProvider client={convex}>
+    <ConvexProvider client={convex}>
       <Routes>
         <Route element={<PublicLayout />}>
           <Route path="/" element={<LandingPage />} />
@@ -42,6 +42,6 @@ export function SpaceAuthAppRoutes() {
 
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
-    </ConvexAuthProvider>
+    </ConvexProvider>
   );
 }

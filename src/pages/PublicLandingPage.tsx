@@ -37,7 +37,7 @@ export function PublicLandingPage() {
   const galleryItems = useQuery(api.gallery.listVisible);
   const customSections = useQuery(api.customSections.listVisible);
 
-  const studioName = settings?.studioName ?? "Lash Studio";
+  const studioName = settings?.studioName || "Lash Studio";
 
   return (
     <div className="flex-1 flex flex-col overflow-hidden">
@@ -93,7 +93,7 @@ function HeroSection({
         {/* Title */}
         <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight leading-[1.05] mb-6 font-serif">
           {(() => {
-            const title = settings?.heroTitle ?? "Идеальные ресницы для вашего взгляда";
+            const title = settings?.heroTitle || "Идеальные ресницы для вашего взгляда";
             const words = title.split(" ");
             const mid = Math.ceil(words.length / 2);
             return (
@@ -109,7 +109,7 @@ function HeroSection({
         </h1>
 
         <p className="text-base md:text-lg text-muted-foreground max-w-xl mx-auto leading-relaxed mb-10">
-          {settings?.heroSubtitle ??
+          {settings?.heroSubtitle ||
             "Профессиональное наращивание ресниц. Подчеркните естественную красоту ваших глаз"}
         </p>
 

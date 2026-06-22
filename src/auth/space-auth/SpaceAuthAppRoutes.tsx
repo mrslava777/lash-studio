@@ -12,6 +12,7 @@ import {
   AvailabilityPage,
   SectionsPage,
 } from "@/pages";
+import { ReviewsPage } from "@/pages/ReviewsPage";
 import { convex } from "../convexClient";
 
 function AdminRoutes() {
@@ -36,6 +37,7 @@ export function SpaceAuthAppRoutes() {
           <Route path="services" element={<ServicesPage />} />
           <Route path="gallery" element={<GalleryPage />} />
           <Route path="availability" element={<AvailabilityPage />} />
+          <Route path="reviews" element={<ReviewsPage />} />
           <Route path="sections" element={<SectionsPage />} />
           <Route path="settings" element={<SettingsPage />} />
         </Route>
